@@ -62,12 +62,18 @@ function Get-RamInfo {
         $speed = ($sticks | ForEach-Object { $_.Speed } | Measure-Object -Maximum).Maximum
         $configSpeed = ($sticks | ForEach-Object { $_.ConfiguredClockSpeed } | Measure-Object -Maximum).Maximum
         $actualSpeed = if ($configSpeed -gt 0) { $configSpeed } else { $speed }
+        $stickCount = @($sticks).Count
+        $slots = @($sticks | ForEach-Object { "$($_.DeviceLocator)".Trim() } | Where-Object { $_ })
         $sb = "${totalGB} GB"
         if ($actualSpeed -gt 0) { $sb += " @ ${actualSpeed} MHz" }
+        $sb += " (${stickCount}x"
+        if ($stickCount -gt 0) { $sb += " $([math]::Round(($totalBytes / $stickCount) / 1073741824)) GB" }
+        $sb += ")"
         $extra = @()
         if ($mfr -and $mfr -ne "Unknown") { $extra += $mfr }
         if ($part -and $part -ne "Unknown") { $extra += $part }
-        if ($extra.Count -gt 0) { $sb += " ($($extra -join ' '))" }
+        if ($extra.Count -gt 0) { $sb += " - $($extra -join ' ')" }
+        if ($slots.Count -gt 0) { $sb += "`nSlots: $($slots -join ', ')" }
         return $sb
     } catch {}
     return "UNKNOWN"
