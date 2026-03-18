@@ -127,10 +127,13 @@ if ($isFrench) {
         Motherboard   = "Carte mere"
         Discord       = "Rejoindre Discord"
         DiscordDm     = "Envoyer les infos a MapleSyrupJunkie"
+        AnyDesk       = "Telecharger AnyDesk"
+        AnyDeskUrl    = "https://anydesk.com/fr/downloads"
         Step1         = "1. Rejoignez le discord, copiez ces infos et envoyez-les a MapleSyrupJunkie"
-        Step2         = "2. Assurez-vous que Windows est a jour (Installer via Windows Update)"
-        Step3         = "3. Ayez une cle USB a disposition, pas besoin de beaucoup d'espace (possiblement requis pour les mises a jour/reglages du BIOS)"
-        Step4         = "4. Discord fonctionnel sur votre telephone (la video sera requise pour le reglage du BIOS)"
+        Step2         = "2. Telecharger et installer AnyDesk (requis pour l'assistance a distance)"
+        Step3         = "3. Assurez-vous que Windows est a jour (Installer via Windows Update)"
+        Step4         = "4. Ayez une cle USB a disposition, pas besoin de beaucoup d'espace (possiblement requis pour les mises a jour/reglages du BIOS)"
+        Step5         = "5. Discord fonctionnel sur votre telephone (la video sera requise pour le reglage du BIOS)"
         Close         = "Fermer"
     }
 } else {
@@ -144,10 +147,13 @@ if ($isFrench) {
         Motherboard   = "Motherboard"
         Discord       = "Join Discord"
         DiscordDm     = "Send info to MapleSyrupJunkie"
+        AnyDesk       = "Download AnyDesk"
+        AnyDeskUrl    = "https://anydesk.com/en/downloads"
         Step1         = "1. Make sure to join the discord and copy this info and send it to me (MapleSyrupJunkie)"
-        Step2         = "2. Make sure windows is up to date (Install from Windows Updates)"
-        Step3         = "3. Have a USB thumb drive at your disposal, does not need a lot of space (might be required for bios updates/settings)"
-        Step4         = "4. Discord ready and functional on your mobile phone (video will be required for BIOS tuning)"
+        Step2         = "2. Download and install AnyDesk (required for remote assistance)"
+        Step3         = "3. Make sure windows is up to date (Install from Windows Updates)"
+        Step4         = "4. Have a USB thumb drive at your disposal, does not need a lot of space (might be required for bios updates/settings)"
+        Step5         = "5. Discord ready and functional on your mobile phone (video will be required for BIOS tuning)"
         Close         = "Close"
     }
 }
@@ -173,6 +179,8 @@ if ($isFrench) {
                 <RowDefinition Height="16"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="12"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
@@ -267,7 +275,13 @@ if ($isFrench) {
                        VerticalAlignment="Center" Margin="10,0,0,0"/>
             </StackPanel>
 
-            <StackPanel Grid.Row="10" Margin="0,0,0,4">
+            <Button Grid.Row="10" Name="btnAnyDesk" Height="32" HorizontalAlignment="Center"
+                    Background="#ef443b" Foreground="White" BorderThickness="0" Cursor="Hand"
+                    Padding="14,0">
+                <TextBlock Name="txtAnyDeskBtn" Text="Download AnyDesk" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+            </Button>
+
+            <StackPanel Grid.Row="12" Margin="0,0,0,4">
                 <TextBlock Name="txtStep1" Foreground="#aaa" FontSize="11" TextWrapping="Wrap" Margin="0,2"
                            Text="1. Make sure to join the discord and copy this info and send it to me (MapleSyrupJunkie)"/>
                 <TextBlock Name="txtStep2" Foreground="#aaa" FontSize="11" TextWrapping="Wrap" Margin="0,2"
@@ -275,7 +289,9 @@ if ($isFrench) {
                 <TextBlock Name="txtStep3" Foreground="#aaa" FontSize="11" TextWrapping="Wrap" Margin="0,2"
                            Text="3. Have a USB thumb drive at your disposal (might be required for bios updates/settings)"/>
                 <TextBlock Name="txtStep4" Foreground="#aaa" FontSize="11" TextWrapping="Wrap" Margin="0,2"
-                           Text="4. Discord ready and functional on your mobile phone (video will be required for BIOS tuning)"/>
+                           Text="4. Have a USB thumb drive at your disposal, does not need a lot of space (might be required for bios updates/settings)"/>
+                <TextBlock Name="txtStep5" Foreground="#aaa" FontSize="11" TextWrapping="Wrap" Margin="0,2"
+                           Text="5. Discord ready and functional on your mobile phone (video will be required for BIOS tuning)"/>
             </StackPanel>
 
             <WrapPanel Grid.Row="14" HorizontalAlignment="Center">
@@ -323,10 +339,12 @@ $txtFingerprint.Text = $str.Collecting
 $window.FindName("txtDiscordBtn").Text = $str.Discord
 $window.FindName("txtDiscordDm").Text = $str.DiscordDm
 $btnClose.Content = $str.Close
+$window.FindName("txtAnyDeskBtn").Text = $str.AnyDesk
 $window.FindName("txtStep1").Text = $str.Step1
 $window.FindName("txtStep2").Text = $str.Step2
 $window.FindName("txtStep3").Text = $str.Step3
 $window.FindName("txtStep4").Text = $str.Step4
+$window.FindName("txtStep5").Text = $str.Step5
 
 # Drag support
 $window.Add_MouseLeftButtonDown({ $window.DragMove() })
@@ -349,6 +367,10 @@ foreach ($name in $links.Keys) {
 
 $btnDiscord = $window.FindName("btnDiscord")
 $btnDiscord.Add_Click({ Start-Process "https://discord.gg/jRG6xsCHtJ" })
+
+$btnAnyDesk = $window.FindName("btnAnyDesk")
+$anyDeskUrl = $str.AnyDeskUrl
+$btnAnyDesk.Add_Click({ Start-Process $anyDeskUrl }.GetNewClosure())
 
 # Copy All button
 $btnCopyAll.Add_Click({
